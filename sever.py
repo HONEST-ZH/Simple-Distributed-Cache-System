@@ -8,6 +8,3 @@ def hello_world():
 @sever.route("/bye")
 def goodbye_world():
     return "<p>Goodbye, World!</p>"
-@sever.route("/fuxk")
-def goodbye_world():
-    return "<p>Fuxk you, World!</p>"

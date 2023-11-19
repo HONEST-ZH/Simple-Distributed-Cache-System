@@ -21,5 +21,5 @@
      1. 不限语言，提交程序源代码（仅限源代码，不得包括.git，动态拉取的第三方包，编译中间文件，最终可执行文件等。如果打包后有几十兆甚至更大，大概率包含了不该有的内容。）
      2. 程序必须基于docker打包，并通过docker compose启动运行（每个cache server为一个docker实例）；
      3. Dockerfile：保证执行docker build可构建成功（会作为评分依据）。为了减少批改作业时构建docker镜像数据传输量，请统一使用ubuntu:20.04为基础镜像（如下）
-     4. compose.yaml：能直接启动不少于规定数量的cache server。每个server将内部HTTP服务端口映射至Host，外部端口从9527递增，即若启动3个server，则通过http://127.0.0.1:9527，http://127.0.0.1:9528，http://127.0.0.1:9529可分别访问3个cache server。
+     4. compose.yaml：能直接启动不少于规定数量的cache server。每个server将内部HTTP服务端口映射至Host，外部端口从9527递增，即若启动3个server，则通过http://127.0.0.1:9527，http://127.0.0.1:9528，http://127.0.0.1:9529 可分别访问3个cache server。
      5. 测试脚本。批改作业会执行此测试脚本，也欢迎各位同学提PR，完善测试覆盖。

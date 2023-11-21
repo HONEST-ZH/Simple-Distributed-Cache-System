@@ -1,6 +1,6 @@
 import flask
 server = flask.Flask(__name__)
-cache = {}
+cache = {'hello':1114}
 '''
 @server.route("/")
 def hello_world():
@@ -19,7 +19,7 @@ def server_read(key):
         n_kv[key] = content
         return n_kv, 200
     else:
-        return None, 404
+        return 404
 @server.delete("/server1/<key>")
 def server_delete(key):
     global cache

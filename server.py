@@ -1,14 +1,17 @@
 import flask
 server = flask.Flask(__name__)
-cache = {'hello':1114}
+cache = {'hello':114,'bye':514}
 '''
 @server.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
 '''
-@server.post("/server1/-d <kv>")
-def server_write(kv):
-    kv = flask.request.json(kv)
+@server.route("/sever1/see_all")
+def server_see_all():
+    return cache
+@server.post("/server1/")
+def server_write():
+    kv = flask.request.json()
     global cache
     cache.update(kv)
 @server.get("/server1/<key>")
@@ -19,7 +22,7 @@ def server_read(key):
         n_kv[key] = content
         return n_kv, 200
     else:
-        return 404
+        return '', 404
 @server.delete("/server1/<key>")
 def server_delete(key):
     global cache

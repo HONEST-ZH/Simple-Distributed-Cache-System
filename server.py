@@ -6,14 +6,13 @@ cache = {'hello':114,'bye':514}
 def hello_world():
     return "<p>Hello, World!</p>"
 '''
-@server.route("/sever1/see_all")
+@server.route("/server1/all")
 def server_see_all():
     return cache
-@server.post("/server1/")
+@server.post("/server1")
 def server_write():
-    kv = flask.request.json()
     global cache
-    cache.update(kv)
+    cache.update(flask.request.json)
 @server.get("/server1/<key>")
 def server_read(key):
     if key in cache:
@@ -28,6 +27,6 @@ def server_delete(key):
     global cache
     if key in cache:
         del cache[key]
-        return 1,200
+        return '1', 200
     else:
-        return 0,200
+        return '0', 200

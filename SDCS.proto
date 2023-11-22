@@ -1,0 +1,11 @@
+syntax = "proto3";
+service SDCS{
+    rpc finddata(key) returns(data) {}
+}
+message key{
+    string key = 1;
+}
+message data{
+    string key = 1;
+    string value = 2;
+}

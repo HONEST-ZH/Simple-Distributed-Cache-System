@@ -12,22 +12,19 @@ def server_see_all():
     return cache
 @server.post("/")
 def server_write():
-    '''
     if request.is_json:
         try:
-            data = request.json
-            print(data)
+            data = request.get_json()
+
         except Exception as e:
             print('error during parsing')
             return '-1'
+        print(data)
+        cache.update(data)
+        return ''
     else:
         print("not json")
         return '-2'
-    '''
-    data = request.data
-    print(data)
-    #cache.update(data)
-    return ''
 @server.get("/<key>")
 def server_read(key):
     if key in cache:

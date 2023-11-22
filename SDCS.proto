@@ -1,11 +1,15 @@
 syntax = "proto3";
 service SDCS{
-    rpc finddata(key) returns(data) {}
+    rpc finddata(Key) returns(Data) {};
+    rpc writedata(Data) returns(State) {};
+    rpc deletedata(Key) returns(State) {};
 }
-message key{
+message Key{
     string key = 1;
 }
-message data{
-    string key = 1;
-    string value = 2;
+message Data{
+    string data = 1;
+}
+message State{
+    int32 state = 1;
 }

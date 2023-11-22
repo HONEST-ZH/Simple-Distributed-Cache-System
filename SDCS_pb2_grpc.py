@@ -16,8 +16,18 @@ class SDCSStub(object):
         """
         self.finddata = channel.unary_unary(
                 '/SDCS/finddata',
-                request_serializer=SDCS__pb2.key.SerializeToString,
-                response_deserializer=SDCS__pb2.data.FromString,
+                request_serializer=SDCS__pb2.Key.SerializeToString,
+                response_deserializer=SDCS__pb2.Data.FromString,
+                )
+        self.writedata = channel.unary_unary(
+                '/SDCS/writedata',
+                request_serializer=SDCS__pb2.Data.SerializeToString,
+                response_deserializer=SDCS__pb2.State.FromString,
+                )
+        self.deletedata = channel.unary_unary(
+                '/SDCS/deletedata',
+                request_serializer=SDCS__pb2.Key.SerializeToString,
+                response_deserializer=SDCS__pb2.State.FromString,
                 )
 
 
@@ -30,13 +40,35 @@ class SDCSServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def writedata(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def deletedata(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SDCSServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'finddata': grpc.unary_unary_rpc_method_handler(
                     servicer.finddata,
-                    request_deserializer=SDCS__pb2.key.FromString,
-                    response_serializer=SDCS__pb2.data.SerializeToString,
+                    request_deserializer=SDCS__pb2.Key.FromString,
+                    response_serializer=SDCS__pb2.Data.SerializeToString,
+            ),
+            'writedata': grpc.unary_unary_rpc_method_handler(
+                    servicer.writedata,
+                    request_deserializer=SDCS__pb2.Data.FromString,
+                    response_serializer=SDCS__pb2.State.SerializeToString,
+            ),
+            'deletedata': grpc.unary_unary_rpc_method_handler(
+                    servicer.deletedata,
+                    request_deserializer=SDCS__pb2.Key.FromString,
+                    response_serializer=SDCS__pb2.State.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -60,7 +92,41 @@ class SDCS(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/SDCS/finddata',
-            SDCS__pb2.key.SerializeToString,
-            SDCS__pb2.data.FromString,
+            SDCS__pb2.Key.SerializeToString,
+            SDCS__pb2.Data.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def writedata(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/SDCS/writedata',
+            SDCS__pb2.Data.SerializeToString,
+            SDCS__pb2.State.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def deletedata(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/SDCS/deletedata',
+            SDCS__pb2.Key.SerializeToString,
+            SDCS__pb2.State.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

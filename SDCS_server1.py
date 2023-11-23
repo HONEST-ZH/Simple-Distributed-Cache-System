@@ -59,6 +59,14 @@ def serve():
     server.add_insecure_port("127.0.0.1:5000")#本节点的grpc服务器地址和端口号
     server.start()
     server.wait_for_termination()
+###rpc的客户端：从SDCS_pb2_grpc的SDCSStub中实例化一个stub。###
+channel0 = grpc.insecure_channel('127.0.0.1:5001')#节点0存根
+stub0 = SDCS_pb2_grpc.SDCSStub(channel0)
+channel1 = grpc.insecure_channel('127.0.0.1:5001')#节点1存根
+stub1 = SDCS_pb2_grpc.SDCSStub(channel1)
+channel2 = grpc.insecure_channel('127.0.0.1:5002')#节点2存根
+stub2 = SDCS_pb2_grpc.SDCSStub(channel2)
+stub = [stub0, stub1, stub2]#存根列表
 
 #####################面向客户端的HTTP操作（基于flask）####################
 #默认显示
@@ -147,12 +155,5 @@ if __name__ == "__main__":
     server.run(host ='127.0.0.1',port = '9527')
     #开启grpc服务器
     server()
-    ###rpc的客户端：从SDCS_pb2_grpc的SDCSStub中实例化一个stub。###
-    channel0 = grpc.insecure_channel('127.0.0.1:5001')#节点0存根
-    stub0 = SDCS_pb2_grpc.SDCSStub(channel0)
-    channel1 = grpc.insecure_channel('127.0.0.1:5001')#节点1存根
-    stub1 = SDCS_pb2_grpc.SDCSStub(channel1)
-    channel2 = grpc.insecure_channel('127.0.0.1:5002')#节点2存根
-    stub2 = SDCS_pb2_grpc.SDCSStub(channel2)
-    stub = [stub0, stub1, stub2]#存根列表
+
 

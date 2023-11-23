@@ -6,7 +6,7 @@ import SDCS_pb2
 import SDCS_pb2_grpc
 server = flask.Flask(__name__)#实例化Flask服务器
 cache = {'muli':114,'momuli':514}#预先为内存写入数据，便于检测
-
+selfnum = 2  # 本节点的序号
 #####################服务器内部的rpc操作(基于gRPC)####################
 ###rpc的服务器端：从SDCS_pb2_grpc的SDCSServicer中创建一个子类，重写其方法。###
 class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
@@ -86,10 +86,12 @@ def server_write():
     for key in data:
         res = hash(key)
         node_num = res%3
-    if node_num == 0:
+    if node_num == selfnum:
         cache.update(data)
         return ''
     Data = SDCS_pb2.Data(data = data)
+    if node_num == 0:
+        stub[0].writedata(Data)
     if node_num == 1:
         stub[1].writedata(Data)
     if node_num == 2:
@@ -153,5 +155,5 @@ if __name__ == "__main__":
     channel2 = grpc.insecure_channel('127.0.0.1:5002')#节点2存根
     stub2 = SDCS_pb2_grpc.SDCSStub(channel2)
     stub = [stub0, stub1, stub2]#存根列表
-    selfnum = 2#本节点的序号
+
 

@@ -114,10 +114,10 @@ def server_read(key):
         return n_kv, 200
     else:#其他节点查找，调用rpc
         Key = SDCS_pb2.Key(key = key)
-        for i in (0,3):
+        for i in range(0,3):
             if i == selfnum:
                 continue
-            _stub = stub(i)
+            _stub = stub[i]
             Data = _stub.finddata(Key)
             data = Data.data
             if data != '':#找到一个其他节点拥有key的数据
@@ -134,10 +134,10 @@ def server_delete(key):
         return '1', 200
     else:
         Key = SDCS_pb2.Key(key=key)
-        for i in (0, 3):
+        for i in range(0, 3):
             if i == selfnum:
                 continue
-            _stub = stub(i)
+            _stub = stub[i]
             State = _stub.deletedata(Key)
             state = State.state
             if state:#找到一个删除了的节点

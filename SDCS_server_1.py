@@ -5,7 +5,7 @@ import SDCS_pb2
 import SDCS_pb2_grpc
 
 server = flask.Flask(__name__)#实例化Flask服务器
-cache = {'muli':1919,'aaaaa':810}#预先为内存写入数据，便于检测
+cache = {'hello':114,'bye':514}#预先为内存写入数据，便于检测
 
 #####################服务器内部的rpc操作(基于gRPC)####################
 #rpc的服务器端：从SDCS_pb2_grpc的SDCSServicer中创建一个子类，重写其方法。
@@ -43,7 +43,7 @@ class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
             State = SDCS_pb2.State(stete=0)
             return State
 #rpc的客户端：从SDCS_pb2_grpc的SDCSStub中实例化一个stub。
-channel = grpc.insecure_channel('127.0.0.1:9528')
+channel = grpc.insecure_channel('127.0.0.1:9527')
 stub = SDCS_pb2_grpc.SDCSStub(channel)
 
 #####################面向客户端的HTTP操作（基于flask）####################

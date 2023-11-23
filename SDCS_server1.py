@@ -146,11 +146,11 @@ if __name__ == "__main__":
     #开启grpc服务器
     server()
     ###rpc的客户端：从SDCS_pb2_grpc的SDCSStub中实例化一个stub。###
-    channel0 = grpc.insecure_channel('127.0.0.1:5001')#节点1存根
+    channel0 = grpc.insecure_channel('127.0.0.1:5001')#节点0存根
     stub0 = SDCS_pb2_grpc.SDCSStub(channel0)
-    channel1 = grpc.insecure_channel('127.0.0.1:5001')#节点2存根
+    channel1 = grpc.insecure_channel('127.0.0.1:5001')#节点1存根
     stub1 = SDCS_pb2_grpc.SDCSStub(channel1)
-    channel2 = grpc.insecure_channel('127.0.0.1:5002')#节点3存根
+    channel2 = grpc.insecure_channel('127.0.0.1:5002')#节点2存根
     stub2 = SDCS_pb2_grpc.SDCSStub(channel2)
     stub = [stub0, stub1, stub2]#存根列表
     selfnum = 0#本节点的序号

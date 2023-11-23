@@ -59,6 +59,8 @@ def serve():
     server.add_insecure_port("127.0.0.1:5000")#本节点的grpc服务器地址和端口号
     server.start()
     server.wait_for_termination()
+    #TODO:多线程开启grpc和flask服务器
+    #TODO:继续测试多节点
 ###rpc的客户端：从SDCS_pb2_grpc的SDCSStub中实例化一个stub。###
 channel0 = grpc.insecure_channel('127.0.0.1:5001')#节点0存根
 stub0 = SDCS_pb2_grpc.SDCSStub(channel0)

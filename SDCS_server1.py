@@ -151,9 +151,10 @@ def server_see_all():
     return cache
 
 if __name__ == "__main__":
+    #开启grpc服务器
+    serve()
     #开启flask服务器
     server.run(host ='127.0.0.1',port = '9527')
-    #开启grpc服务器
-    server()
+
 
 

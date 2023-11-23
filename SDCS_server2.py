@@ -1,11 +1,12 @@
 import flask
 from flask import request
+from concurrent import futures
 import grpc
 import SDCS_pb2
 import SDCS_pb2_grpc
 
 server = flask.Flask(__name__)#实例化Flask服务器
-cache = {'hello':114,'bye':514}#预先为内存写入数据，便于检测
+cache = {'muli':1919,'yada':810}#预先为内存写入数据，便于检测
 
 #####################服务器内部的rpc操作(基于gRPC)####################
 #rpc的服务器端：从SDCS_pb2_grpc的SDCSServicer中创建一个子类，重写其方法。
@@ -27,7 +28,7 @@ class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
             Data = SDCS_pb2.Data(data = '')
             return Data
     '''
-    响应其他的节点的查找请求
+    响应其他的节点的删除请求
     函数输入（请求）是SDCS_pb2中的Key类型，和未用到的 unused_context
     函数输出（回复）是SDCS_pb2中的State类型
     '''
@@ -42,9 +43,19 @@ class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
         else:
             State = SDCS_pb2.State(stete=0)
             return State
+###开启rpc服务器###
+def serve():
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    SDCS_pb2_grpc.add_SDCSServicer_to_server(SDCSServicer(), server)
+    server.add_insecure_port("127.0.0.1:5001")
+    server.start()
+    server.wait_for_termination()
+server()
 #rpc的客户端：从SDCS_pb2_grpc的SDCSStub中实例化一个stub。
-channel = grpc.insecure_channel('127.0.0.1:9527')
-stub = SDCS_pb2_grpc.SDCSStub(channel)
+channel1 = grpc.insecure_channel('127.0.0.1:5000')
+stub1 = SDCS_pb2_grpc.SDCSStub(channel1)
+channel2 = grpc.insecure_channel('127.0.0.1:5002')
+stub2 = SDCS_pb2_grpc.SDCSStub(channel2)
 
 #####################面向客户端的HTTP操作（基于flask）####################
 #默认显示

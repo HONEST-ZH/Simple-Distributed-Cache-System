@@ -1,11 +1,10 @@
 FROM ubuntu:20.04
 WORKDIR /sdcs
 #复制镜像所需的文件：SDCS.proto、SDCS_server0.py、SDCS_server1.py、SDCS_server2.pyrequirements.txt
-COPY SDCS.proto /sdcs/
-   &&requirements.txt /sdcs/
-   &&SDCS_server0.py /sdcs/
-   &&SDCS_server1.py /sdcs/
-   &&SDCS_server2.py /sdcs/
+COPY SDCS.proto /sdcs/ && requirements.txt /sdcs/
+COPY SDCS_server0.py /sdcs/
+COPY SDCS_server1.py /sdcs/
+COPY SDCS_server2.py /sdcs/
 
 RUN apt updata
     #更新apt

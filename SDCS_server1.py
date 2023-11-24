@@ -5,6 +5,7 @@ import grpc
 import SDCS_pb2
 import SDCS_pb2_grpc
 import threading
+import hashlib
 server = flask.Flask(__name__)#实例化Flask服务器
 cache = {'hello':114,'bye':514}#预先为内存写入数据，便于检测
 selfnum = 0  # 本节点的序号
@@ -93,9 +94,11 @@ def server_write():
     '''
     data = request.get_json()
     for key in data:
-        res = hash(key)
-        #TODO:不同程序的hash不一样,可能带来一致性问题
-        node_num = res%3
+        hash = hashlib.md5()
+        hash.update(key.encode("utf-8"))
+        res = hash.hexdigest()
+        res = int(res, 16)
+        node_num = res % 3
         print(node_num)
     if node_num == selfnum:
         cache.update(data)

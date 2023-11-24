@@ -1,9 +1,10 @@
 import flask
-from flask import request
+from flask import request,json
 from concurrent import futures
 import grpc
 import SDCS_pb2
 import SDCS_pb2_grpc
+import threading
 server = flask.Flask(__name__)#实例化Flask服务器
 cache = {'yada':114,'moyada':514}#预先为内存写入数据，便于检测
 selfnum = 1  # 本节点的序号
@@ -49,7 +50,7 @@ class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
     def writedata(self, request: SDCS_pb2.Data, unused_context
                    ) -> SDCS_pb2.State:
         data = request.data
-        cache.update(data)
+        cache.update(json.loads(data))
         State = SDCS_pb2.State(state = 1)
         return State
 ###开启rpc服务器###
@@ -97,13 +98,19 @@ def server_write():
     if node_num == selfnum:
         cache.update(data)
         return ''
-    Data = SDCS_pb2.Data(data = data)
+    Data = SDCS_pb2.Data(data = json.dumps(data))
     if node_num == 0:
-        stub[0].writedata(Data)
+        State = stub[0].writedata(Data)
+        state = State.stat
+        return state, 2
     if node_num == 1:
-        stub[1].writedata(Data)
+        State = stub[1].writedata(Data)
+        state = State.stat
+        return state, 2
     if node_num == 2:
-        stub[2].writedata(Data)
+        State = stub[2].writedata(Data)
+        state = State.stat
+        return state, 2
 #客户端从服务器获得数据
 @server.get("/<key>")
 def server_read(key):
@@ -151,10 +158,12 @@ def server_see_all():
     return cache
 
 if __name__ == "__main__":
-    #开启grpc服务器
-    serve()
-    #开启flask服务器
-    server.run(host ='127.0.0.1',port = '9528')
+    # 创建两个线程对象
+    grpc_server_thread = threading.Thread(target = serve())
+    flask_server_thread = threading.Thread(target = server.run(host ='127.0.0.1',port = '9528'))
+    # 启动两个线程
+    grpc_server_thread.start()#开启grpc服务器
+    flask_server_thread.start()#开启flask服务器
 
 
 

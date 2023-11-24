@@ -95,6 +95,7 @@ def server_write():
     for key in data:
         res = hash(key)
         node_num = res%3
+        print(node_num)
     if node_num == selfnum:
         cache.update(data)
         return ''
@@ -105,8 +106,7 @@ def server_write():
         State = stub[1].writedata(Data)
     if node_num == 2:
         State = stub[2].writedata(Data)
-    state = State.stat
-    print(state)
+    state = State.state
     return ''
 #客户端从服务器获得数据
 @server.get("/<key>")

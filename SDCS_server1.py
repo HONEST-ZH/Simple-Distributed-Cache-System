@@ -7,10 +7,10 @@ import SDCS_pb2_grpc
 import threading
 import hashlib
 server = flask.Flask(__name__)#实例化Flask服务器
-cache = {'hello':114,'bye':514}#预先为内存写入数据，便于检测
-selfnum = 0  # 本节点的序号
+cache = {'yada':114,'moyada':514}#预先为内存写入数据，便于检测
+selfnum = 1  # 本节点的序号
 #####################服务器内部的rpc操作(基于gRPC)####################
-###rpc的服务器端代码：从SDCS_pb2_grpc的SDCSServicer中创建一个子类，重写其方法。###
+###rpc的服务器端：从SDCS_pb2_grpc的SDCSServicer中创建一个子类，重写其方法。###
 class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
     '''
     响应其他的节点的查找请求
@@ -58,10 +58,10 @@ class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
 def grpc_serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     SDCS_pb2_grpc.add_SDCSServicer_to_server(SDCSServicer(), server)
-    server.add_insecure_port("127.0.0.1:5000")#本节点的grpc服务器地址和端口号
+    server.add_insecure_port("127.0.0.1:5001")#本节点的grpc服务器地址和端口号
     server.start()
     server.wait_for_termination()
-###rpc的客户端代码：从SDCS_pb2_grpc的SDCSStub中实例化stub。###
+###rpc的客户端：从SDCS_pb2_grpc的SDCSStub中实例化一个stub。###
 channel0 = grpc.insecure_channel('127.0.0.1:5000')#节点0存根
 stub0 = SDCS_pb2_grpc.SDCSStub(channel0)
 channel1 = grpc.insecure_channel('127.0.0.1:5001')#节点1存根
@@ -159,16 +159,15 @@ def server_see_all():
     return cache
 #开启flask服务器
 def flask_serve():
-    server.run(host = '127.0.0.1', port = '9527')
-
+    server.run(host = '127.0.0.1', port = '9528')
 if __name__ == "__main__":
     # 创建两个线程对象
     grpc_server_thread = threading.Thread(target=grpc_serve)
     flask_server_thread = threading.Thread(target=flask_serve)
     # 启动两个线程
-    grpc_server_thread.start()#开启grpc服务器
-    flask_server_thread.start()#开启flask服务器
-    #等待线程结束
+    grpc_server_thread.start()  # 开启grpc服务器
+    flask_server_thread.start()  # 开启flask服务器
+    # 等待线程结束
     grpc_server_thread.join()
     flask_server_thread.join()
 

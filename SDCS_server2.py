@@ -7,8 +7,8 @@ import SDCS_pb2_grpc
 import threading
 import hashlib
 server = flask.Flask(__name__)#实例化Flask服务器
-cache = {'yada':114,'moyada':514}#预先为内存写入数据，便于检测
-selfnum = 1  # 本节点的序号
+cache = {'muli':114,'momuli':514}#预先为内存写入数据，便于检测
+selfnum = 2  # 本节点的序号
 #####################服务器内部的rpc操作(基于gRPC)####################
 ###rpc的服务器端：从SDCS_pb2_grpc的SDCSServicer中创建一个子类，重写其方法。###
 class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
@@ -58,7 +58,7 @@ class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
 def grpc_serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     SDCS_pb2_grpc.add_SDCSServicer_to_server(SDCSServicer(), server)
-    server.add_insecure_port("127.0.0.1:5001")#本节点的grpc服务器地址和端口号
+    server.add_insecure_port("127.0.0.1:5002")#本节点的grpc服务器地址和端口号
     server.start()
     server.wait_for_termination()
 ###rpc的客户端：从SDCS_pb2_grpc的SDCSStub中实例化一个stub。###
@@ -97,8 +97,8 @@ def server_write():
         hash = hashlib.md5()
         hash.update(key.encode("utf-8"))
         res = hash.hexdigest()
-        res = int(res, 16)
-        node_num = res % 3
+        res = int(res,16)
+        node_num = res%3
         print(node_num)
     if node_num == selfnum:
         cache.update(data)
@@ -159,7 +159,7 @@ def server_see_all():
     return cache
 #开启flask服务器
 def flask_serve():
-    server.run(host = '127.0.0.1', port = '9528')
+    server.run(host = '127.0.0.1', port = '9529')
 if __name__ == "__main__":
     # 创建两个线程对象
     grpc_server_thread = threading.Thread(target=grpc_serve)
@@ -170,7 +170,6 @@ if __name__ == "__main__":
     # 等待线程结束
     grpc_server_thread.join()
     flask_server_thread.join()
-
 
 
 

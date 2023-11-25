@@ -22,8 +22,7 @@ class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
         key = request.key
         if key in cache:#当前节点有
             value = cache[key]
-            dict = {key,value}
-            Data = SDCS_pb2.Data(data = str(dict))
+            Data = SDCS_pb2.Data(data = str(value))
             return Data
         else:#当前节点没有
             Data = SDCS_pb2.Data(data ='')

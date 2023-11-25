@@ -1,3 +1,4 @@
+version: "3"
 services:
   sdcs_server0:
     build:

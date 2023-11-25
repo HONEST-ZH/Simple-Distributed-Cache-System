@@ -11,8 +11,8 @@ COPY /sources.list /etc/apt/
 RUN apt-get update -y \
 && apt-get install -y python3.9 \
 && apt-get install -y python3-pip \
-&& python3 -m pip install --upgrade pip \
 && python3 -m pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple \
+&& python3 -m pip install --upgrade pip \
 && python3 -m pip install -r requirements.txt \
 && python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. SDCS.proto
 # 暴露5000端口

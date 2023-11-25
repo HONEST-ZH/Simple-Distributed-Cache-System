@@ -58,15 +58,15 @@ class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
 def grpc_serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     SDCS_pb2_grpc.add_SDCSServicer_to_server(SDCSServicer(), server)
-    server.add_insecure_port("0.0.0.0:5000")#本节点的grpc服务器地址和端口号
+    server.add_insecure_port("sdcs_server0:5000")#本节点的grpc服务器地址和端口号
     server.start()
     server.wait_for_termination()
 ###rpc的客户端代码：从SDCS_pb2_grpc的SDCSStub中实例化stub。###
-channel0 = grpc.insecure_channel('0.0.0.0:5000')#节点0存根
+channel0 = grpc.insecure_channel('sdcs_server0:5000')#节点0存根
 stub0 = SDCS_pb2_grpc.SDCSStub(channel0)
-channel1 = grpc.insecure_channel('0.0.0.0:5001')#节点1存根
+channel1 = grpc.insecure_channel('sdcs_server1:5000')#节点1存根
 stub1 = SDCS_pb2_grpc.SDCSStub(channel1)
-channel2 = grpc.insecure_channel('0.0.0.0:5002')#节点2存根
+channel2 = grpc.insecure_channel('sdcs_server2:5000')#节点2存根
 stub2 = SDCS_pb2_grpc.SDCSStub(channel2)
 stub = [stub0, stub1, stub2]#存根列表
 

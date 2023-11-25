@@ -1,0 +1,21 @@
+FROM ubuntu:20.04
+WORKDIR /sdcs
+#复制镜像所需的文件：SDCS.proto、SDCS_server0.py、SDCS_server1.py、SDCS_server2.pyrequirements.txt
+COPY /code  /sdcs
+COPY /sources.list /etc/apt/
+#更新apt,下载python,更新pip,换pip的镜像源
+#安装virtualenv,创建虚拟环境,激活虚拟环境
+#从requirements.txt下载依赖
+#从SDCS.proto文件生成SDCS_pb2.py和SDCS_pb2_grpc.py
+#运行SDCS_server0.py、SDCS_server1.py、SDCS_server2.py
+RUN apt-get update -y \
+&& apt-get install -y python3.9 \
+&& apt-get install -y python3-pip \
+&& python3 -m pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple \
+&& python3 -m pip install --upgrade pip \
+&& python3 -m pip install -r requirements.txt \
+&& python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. SDCS.proto
+# 暴露5000端口
+EXPOSE 5000
+# 容器启动时运行SDCS_server2.py
+CMD ["python3", "SDCS_server2.py"]

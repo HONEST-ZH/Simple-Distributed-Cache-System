@@ -17,16 +17,15 @@ class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
     函数输入（请求）是SDCS_pb2中的Key类型，和未用到的 unused_context
     函数输出（回复）是SDCS_pb2中的Data类型
     '''
-    def finddata(self, request:SDCS_pb2.Key, unused_context
-                 )->SDCS_pb2.Data:
+    def finddata(self, request: SDCS_pb2.Key, unused_context
+                 )-> SDCS_pb2.Data:
         key = request.key
         if key in cache:#当前节点有
             value = cache[key]
-            dict = {key,value}
-            Data = SDCS_pb2.Data(data = str(dict))
+            Data = SDCS_pb2.Data(data = str(value))
             return Data
         else:#当前节点没有
-            Data = SDCS_pb2.Data(data = '')
+            Data = SDCS_pb2.Data(data ='')
             return Data
     '''
     响应其他的节点的删除请求
@@ -34,7 +33,7 @@ class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
     函数输出（回复）是SDCS_pb2中的State类型
     '''
     def deletedata(self, request: SDCS_pb2.Key, unused_context
-                 ) -> SDCS_pb2.State:
+                   ) -> SDCS_pb2.State:
         key = request.key
         if key in cache:#当前节点有
             cache.pop(key)
@@ -49,7 +48,7 @@ class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
         函数输出（回复）是SDCS_pb2中的State类型
     '''
     def writedata(self, request: SDCS_pb2.Data, unused_context
-                   ) -> SDCS_pb2.State:
+                  ) -> SDCS_pb2.State:
         data = request.data
         cache.update(json.loads(data))
         State = SDCS_pb2.State(state = 1)
@@ -58,15 +57,15 @@ class SDCSServicer(SDCS_pb2_grpc.SDCSServicer):
 def grpc_serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     SDCS_pb2_grpc.add_SDCSServicer_to_server(SDCSServicer(), server)
-    server.add_insecure_port("127.0.0.1:5001")#本节点的grpc服务器地址和端口号
+    server.add_insecure_port("sdcs_server1:5000")#本节点的grpc服务器地址和端口号
     server.start()
     server.wait_for_termination()
 ###rpc的客户端：从SDCS_pb2_grpc的SDCSStub中实例化一个stub。###
-channel0 = grpc.insecure_channel('127.0.0.1:5000')#节点0存根
+channel0 = grpc.insecure_channel('sdcs_server0:5000')#节点0存根
 stub0 = SDCS_pb2_grpc.SDCSStub(channel0)
-channel1 = grpc.insecure_channel('127.0.0.1:5001')#节点1存根
+channel1 = grpc.insecure_channel('sdcs_server1:5000')#节点1存根
 stub1 = SDCS_pb2_grpc.SDCSStub(channel1)
-channel2 = grpc.insecure_channel('127.0.0.1:5002')#节点2存根
+channel2 = grpc.insecure_channel('sdcs_server2:5000')#节点2存根
 stub2 = SDCS_pb2_grpc.SDCSStub(channel2)
 stub = [stub0, stub1, stub2]#存根列表
 
@@ -159,7 +158,9 @@ def server_see_all():
     return cache
 #开启flask服务器
 def flask_serve():
-    server.run(host = '127.0.0.1', port = '9528')
+    server.run(host = '0.0.0.0', port = '8000')
+    #127.0.0.1只接受容器内的本地访问，使用0.0.0.0向容器外开放8000端口
+    #访问时，最终实现的是从宿主机的IP地址的9527端口访问，由容器实现映射
 if __name__ == "__main__":
     # 创建两个线程对象
     grpc_server_thread = threading.Thread(target=grpc_serve)

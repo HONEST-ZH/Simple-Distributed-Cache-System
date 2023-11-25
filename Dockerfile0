@@ -15,7 +15,7 @@ RUN apt-get update -y \
 && python3 -m pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple \
 && python3 -m pip install -r requirements.txt \
 && python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. SDCS.proto
-# 暴露5000端口
-EXPOSE 5000
+# 暴露8000端口
+EXPOSE 8000 5000
 # 容器启动时运行SDCS_server0.py
 CMD ["python3", "SDCS_server0.py"]

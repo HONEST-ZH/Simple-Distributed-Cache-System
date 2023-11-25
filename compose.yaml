@@ -1,8 +1,23 @@
 services:
-  sdcs_server:
+  sdcs_server0:
     build:
       context: .
+      dockerfile: Dockerfile0
     ports:
-      - 8000:8000
-
+      - 9527:8000
+      - 5000:5000
+  sdcs_server1:
+    build:
+      context: .
+      dockerfile: Dockerfile1
+    ports:
+      - 9528:8000
+      - 5001:5000
+  sdcs_server2:
+    build:
+      context: .
+      dockerfile: Dockerfile2
+    ports:
+      - 9529:8000
+      - 5002:5000
 
